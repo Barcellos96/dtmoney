@@ -1,11 +1,11 @@
 import { FormEvent, useState } from 'react';
 import Modal from 'react-modal';
 import { Container, TransactionTypeContainer, RadioBox} from './style';
-import { api } from '../../services/api';
 
 import closeImg from '../../assets/close.svg';
 import incomeImg from '../../assets/income.svg';
 import outcomeImg from '../../assets/outcome.svg';
+import { useTransactions } from '../../hooks/useTransactions';
 
 
 
@@ -16,25 +16,31 @@ interface NewTransactionModalProps{
 }
 
 export function NewTransactionModal({isOpen, onRequestClose}: NewTransactionModalProps) {
+    const { createTransaction } = useTransactions(); //puxando transations do context
+
     const [title, setTitle] = useState('');
-    const [value, setValue] = useState(0);
+    const [amount, setAmount] = useState(0);
     const [category, setCategory] = useState(''); //criar um valor pra cada input que tiver
     const [type, setType] = useState('deposit') //sempre que preciso armanezar informação através de um clique sempre utilizar o STATE
 
-    function handleCreateNewTransaction(event: FormEvent) {
+    async function handleCreateNewTransaction(event: FormEvent){ //cadastro das transações
         event.preventDefault();
 
-        const data = {
-            title, 
-            value,
+        await createTransaction({  //vai aguardar a função executar para poder fechar o modal, por isso criamos uma function async e um await na criação.
+            title,
+            amount,
             category,
-            type
-        };
+            type,
+        })
+        //após executar function o modal vai fechar e retornar com valores originais
+        setTitle('');
+        setAmount(0);
+        setCategory('');
+        setType('deposit');
+        
+        onRequestClose(); //fechar modal
 
-        api.post('/transactions', data) //transactions ainda nao criada. Utiliza POST para inserção 
     }
-
-
     return(
         // passar isOpen para abrir modal e passar onRequestClose para colocar atribuições do react-modal (fechar com ESC ou clicar fora do modal) 
         //usar repasse de componentes
@@ -65,8 +71,8 @@ export function NewTransactionModal({isOpen, onRequestClose}: NewTransactionModa
                 <input
                   type="number"
                   placeholder="Valor"
-                  value={value} //armazenado no state
-                  onChange={event => setValue(Number(event.target.value))} //executa toda vez que o valor do input for alterado e salva dentro de value. Number para converter pra numeros
+                  value={amount} //armazenado no state
+                  onChange={event => setAmount(Number(event.target.value))} //executa toda vez que o valor do input for alterado e salva dentro de value. Number para converter pra numeros
                 />
 
                 <TransactionTypeContainer>

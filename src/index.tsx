@@ -8,7 +8,7 @@ createServer({ //função createServer
     transaction: Model, //do tipo model a tabela transaction //transaction joga no return schema.create('aqui', ) //nome da primeira tabela
   },
 
-  //dados pré cadastrados
+  //dados pré-cadastrados
   seeds(server){
     server.db.loadData({ //passar o nome da tabela, que é o nome do model, só que sempre no plural
       transactions: [
@@ -31,20 +31,21 @@ createServer({ //função createServer
       ]
     })
   },
-
+  
   routes(){ //rota ficticia
-    this.namespace = 'api'; //todas chamadas 'api' estarão a partir do indereço de index.tsx/TransactionTable()
+  this.namespace = 'api'; //todas chamadas 'api' estarão a partir do indereço de index.tsx/TransactionTable()
 
-    this.get('/transactions', () => { //pegar (get) todos itens de /transactions terá um retorno em vetor (array)
-      return this.schema.all('transaction')
-    })
+  this.get('/transactions', () => { //pegar (get) todos itens de /transactions terá um retorno em vetor (array) // /transactions é um caminho que irá existir futuramente
+    return this.schema.all('transaction')
+  })
 
-    this.post('/transactions', (schema, request) => { // [201] código de sucesso para criação que aparece no console.log //schema é o Banco de Dados(BD)
-      const data = JSON.parse(request.requestBody) //converter em json pq estão em JS
+  this.post('/transactions', (schema, request) => { // [201] código de sucesso para criação que aparece no console.log //schema é o Banco de Dados(BD)
+    const data = JSON.parse(request.requestBody) //converter em json pq estão em JS (padrão em texto)
 
-      return schema.create('transaction', data) 
-    })
-  }
+    return schema.create('transaction', data); 
+  })
+}
+  
 })
 
 ReactDOM.render(

@@ -4,9 +4,9 @@ import { Dashboard } from "./components/Dashboard";
 import { Header } from "./components/Header";
 import { NewTransactionModal } from "./components/NewTransactionModal";
 import { GlobalStyle } from "./styles/global";
+import { TransactionProvider } from "./hooks/useTransactions";
 
 Modal.setAppElement('#root')
-
 
 //sempre precisar que precisar uma informação seja compartilha entre mais de um componente, repassar inforção pra um componente que esteja envolta de outros componentes
 
@@ -22,8 +22,9 @@ export function App() {
   }
   
   return (
-    <>
-    {/* passar propriedade onOpenNewTransactionModal ---- funcionalidade props ---muito utilizado no react essa funcionalidade utilizada no Header */}
+    //TransactionProvider nao recebe conteudo dentro é para ser <TransactionProvider/>, mas iremos fazer um props em TransactionsContext
+    // passar propriedade onOpenNewTransactionModal ---- funcionalidade props ---muito utilizado no react essa funcionalidade utilizada no Header 
+    <TransactionProvider> 
       <Header onOpenNewTransactionModal={handleOpenNewTransactionModal} /> 
 
       <Dashboard />
@@ -34,6 +35,6 @@ export function App() {
       />
 
       <GlobalStyle />
-    </>
+    </TransactionProvider> 
   );
 }
